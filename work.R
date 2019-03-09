@@ -95,6 +95,7 @@ class(list)
 list[1]
 
 valdf <- data.frame(val1)
+valdf
     
 nrow(valdf)      
 
@@ -122,9 +123,55 @@ valdf
 head(tmp3)
 colnames(tmp3) <- "rawText"
 tmp3[1,]
+x <- str_remove_all(tmp3$rawText[1], ",")
+x
 
-tmp4 <- str_remove(tmp3$rawText, ",")
+tmp4 <- str_remove_all(tmp3$rawText, ",")
 head(tmp4)
 View(tmp4)
-unlist(strsplit(as.character(tmp3$rawText[1]), split=" "))
+tmp5 <- unlist(strsplit(as.character(tmp3$rawText[1]), split=" "))
 
+tmp3
+
+wip <- tmp1
+
+
+str <- "9,8,7 111 222"
+
+getwd()
+setwd("./exercise/dataMining")
+tmplog <- read.csv("log.txt", sep="\"")
+head(tmplog)
+
+?read.csv
+
+
+# cleanup step 2
+# Elimination or the unnecessary data in the entry: time/date
+tmp2 <- as.data.frame(str_remove(tmp1$text, "\\[.*\\]"))
+head(tmp2)
+colnames(tmp2) <-  c("text")
+
+# cleanup step 3
+# Elimination or the unnecessary data in the entry: ip / host address, time/date
+tmp3 <- data.frame(str_remove(tmp1_4$text, ".*\\]"))
+colnames(tmp3) <- "text"
+head(tmp3)
+
+# cleanup step 4
+# eliminate the commas
+tmp4 <- data.frame(str_remove_all(tmp3$text, ","))
+colnames(tmp4) <- "text"
+head(tmp4)
+
+# cleanup step 5
+# replace the double spaces by one
+tmp5 <- data.frame(str_replace_all(tmp4$text, "  ", " "))
+colnames(tmp5) <- "text"
+head(tmp5)
+
+tmp6<- data.frame(str_replace_all(tmp6$text, "  ", " "))
+colnames(tmp6) <- "text"
+head(tmp6)
+
+tmp6[1,]
