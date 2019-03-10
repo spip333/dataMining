@@ -57,3 +57,44 @@ result2$col1 <- NULL
 result2$col2 <- NULL
 head(result2)
 
+
+## Aufgabe2
+filename <- "testdata.txt"
+mydf <- read.csv(filename)
+head(mydf)
+
+# check if employee id, client id, department id are equally partitionned
+hist(mydf$employeeid)
+hist(mydf$clientid)
+hist(mydf$departmentid)
+
+# check if hours of access are normally dispatched
+hist(mydf$hour)
+
+# how many different employee ids?
+employeeids <- mydf %>% 
+  distinct(employeeid)
+employeeids
+
+# how many different department ids?
+departmentids <- mydf %>% 
+  distinct(departmentid)
+
+departmentids
+
+# this is weird: 1 Million access are made from 9 employees from 92 departments????
+# looks suspicious to me. Does 1 employee belongs to several departments?
+
+empdep <- mydf %>% 
+  distinct(employeeid, departmentid)
+
+empdep
+
+class(empdep)
+head(empdep)
+# obviously, some employees belong to several departments
+
+hist(empdep$employeeid)
+hist(empdep$departmentid)
+
+# is one employe more involved?
