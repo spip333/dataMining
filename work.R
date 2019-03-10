@@ -174,4 +174,35 @@ tmp6<- data.frame(str_replace_all(tmp6$text, "  ", " "))
 colnames(tmp6) <- "text"
 head(tmp6)
 
-tmp6[1,]
+t1 <- "hello [youpie] 2222"
+
+str_remove(t1, ".*\\[")
+str_replace(t1, ".*\\[", "\\[")
+
+##############################
+x <- "hello  2222"
+df6[1]
+x2 <- df6[1]
+x2
+str_replace(x2, "\\]", "\\]\"")
+
+
+head(rawLog)
+tmp1 <- data.frame(rawLog$col2)
+tmp1[1,]
+head(tmp1)
+
+
+
+tmp2 <- dplyr::filter(tmp1, !grepl("GET", rawLog.col2, ignore.case = F)) %>%
+filter(tmp2, !grepl("POST", rawLog.col2, ignore.case = F)) %>%
+filter(tmp3, !grepl("OPTIONS", rawLog.col2, ignore.case = F)) %>%
+filter(tmp4, !grepl("HEAD", rawLog.col2, ignore.case = F))
+
+str <- "[09/Mar/2004:22:31:21 -0800]"
+
+substring(str, 14,16)
+
+str2 <- "64.242.88.10 - - [07/Mar/2004:16:05:49 -0800]"
+
+str_replace(str2, ".*\\[", "\\[")
