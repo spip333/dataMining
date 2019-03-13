@@ -98,3 +98,6 @@ hist(empdep$employeeid)
 hist(empdep$departmentid)
 
 # is one employe more involved?
+
+res <- empdep %>% group_by(employeeid,departmentid) %>% tally
+hist(res$employeeid)
