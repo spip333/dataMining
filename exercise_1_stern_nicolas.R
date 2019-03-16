@@ -7,7 +7,6 @@
 # 13.03.2019
 # ################################################################
 
-
 #1)
 #a)
 library(dplyr)
@@ -135,14 +134,15 @@ hist(res$employeeid)
 # At this points, it is possible to draw a few conclusions, and perhaps formulate some hypothesis:
 # The data do not look like real life data: The 10 users found in the log belong to 99 departments.
 # 
-# The fact that the employee ids are pretty much equally present in the log looks also as if the logdata 
-# was not produced by human interaction.
-#
-# One hypothesis is that the accesses have been produce by some kind of machine.
+# The fact that the employee ids are pretty much equally present in the log may be a hint that the logdata 
+# was not produced by human interaction, but by some kind of machine, or other non-human process.
 # 
 # One way we could check this hypothesis would be to identify some kind of pattern 
 # in the access times (based on the user id). Unfortunately, the data is not complete enough if 
 # we only know the hour of the access: we would need the full timestamp of the access.
 # 
 # Another data that would be worth looking at is the ip address from which the request is 
-# initiated. Unfortunately, the data is not complete enough.
+# initiated. Unfortunately, again, the data is not complete enough.
+# 
+# It is also possible that the server has been hacked, and the logdata we obtained was artificially created.
+# The only way to check this hypothesis is to consult the server logs (of the server itself, not the web server log).
