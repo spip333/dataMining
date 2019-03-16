@@ -1,5 +1,5 @@
 #set the working directory specific to my machine
-setwd("/Users/andreagiovannini/Documents/Iniziative/BFH/2018/1_course/R-Scripts Woche 1/dataset/HMP_Dataset")
+#setwd("/Users/andreagiovannini/Documents/Iniziative/BFH/2018/1_course/R-Scripts Woche 1/dataset/HMP_Dataset")
 
 
 #create a data frame from all files in specified folder
