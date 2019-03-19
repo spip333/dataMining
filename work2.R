@@ -71,3 +71,44 @@ dfa
 dfb
 dfab = rbind(dfa, dfb)
 dfab
+
+
+
+#############################################
+# naive-bayes
+head(test_data)
+head(train_data)
+df_train_data_class <- data.frame(train_data_class)
+head(df_train_data_class)
+str(df_train_class)
+
+head(testData)
+head(trainData)
+head(iris_train_labels)
+str(iris_train_labels)
+
+
+m1 = naiveBayes(train_data, df_train_data_class)
+m2 = naiveBayes(trainData, iris_train_labels)
+m1
+m2
+pred_nb1 = predict(m1, test_data)
+pred_nb2 = predict(m2, testData)
+pred_nb1
+pred_nb2
+
+
+table(df$class, pred_nb1)
+
+
+
+table(iris_test_labels, pred_nb2)
+
+dim(iris_train_labels)
+head(trainData)
+head(iris_train_labels)
+head(iris_test_labels)
+head(df$class)
+
+m <- NULL
+pred_nb <- NULL

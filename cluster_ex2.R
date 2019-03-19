@@ -53,40 +53,45 @@ View(df)
 #then due to climbed the stairs in his apartment to rest in the living room.
 #With clustering we would like to distinguish between the 2 events.
 
-################### dev
 head(df)
 head(df1)
 head(df2)
 head(df1_sample)
 head(df2_sample)
 
+# create a set of train data with the two samples
 train_data_with_class <- rbind(df1_sample, df2_sample)
 train_data_class <- train_data_with_class$class
-
-head(train_data_with_class)
-
 train_data <- train_data_with_class
 train_data$class <- NULL
 train_data$timestep <- NULL
 
 head(train_data)
 
-
-head(df)
+# prepare the set of test data from df
 test_data <- df
 test_data$timestep <- NULL
 test_data$class <- NULL
 
-head(test_data)
-nrow(test_data)
+# check and proceed to knn
 dim(train_data)
 dim(test_data)
-test_data <- df 
+
 pred_knn <- knn(train=train_data, test=test_data, cl=train_data_class, k=2 )
+
 table(pred_knn, df$class)
 
+# validate result
 truthVectorValidate_knn = pred_knn == df$class
-good = length(truthVectorValidate_knn[truthVectorValidate_knn==TRUE])
-bad = length(truthVectorValidate_knn[truthVectorValidate_knn==FALSE])
-bad/(good+bad)
+correct = length(truthVectorValidate_knn[truthVectorValidate_knn==TRUE])
+false = length(truthVectorValidate_knn[truthVectorValidate_knn==FALSE])
+false /(correct + false)
 
+
+#########################################################################
+head(iris)
+iris_data = as.matrix(iris[,1:4])
+head(iris_data)
+number_of_clusters = 3
+km = kmeans(iris_data,centers=number_of_clusters)#,iter.max = )
+km
