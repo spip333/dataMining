@@ -1,7 +1,6 @@
 #set the working directory specific to my machine
-#setwd("/Users/andreagiovannini/Documents/Iniziative/BFH/2018/1_course/R-Scripts Woche 1/dataset/HMP_Dataset")
-getwd()
-setwd("./exercise/dataMining/dataset/HMP_Dataset")
+setwd("/Users/andreagiovannini/Documents/Iniziative/BFH/2018/1_course/R-Scripts Woche 1/dataset/HMP_Dataset")
+
 
 #create a data frame from all files in specified folder
 create_activity_dataframe = function(activityFolder,classId) {
@@ -15,35 +14,18 @@ create_activity_dataframe = function(activityFolder,classId) {
 }
 
 df1 = create_activity_dataframe("Brush_teeth",1)
-
-#Look at the data in df1
-head(df1)
+#Look at the data
+View(df1)
 dim(df1)
-
 library(ggplot2)
-
 df1_sample = df1[sample(nrow(df1), 500), ]
-
 ggplot(df1_sample, aes(timestep)) + 
   geom_line(aes(y = x, colour = "x")) + 
   geom_line(aes(y = y, colour = "y")) + 
   geom_line(aes(y = z, colour = "z"))
 
-
 df2 = create_activity_dataframe("Climb_stairs",2)
-
-#Look at the data in df1
-head(df2)
 dim(df2)
-
-df2_sample = df2[sample(nrow(df2), 500), ]
-
-ggplot(df2_sample, aes(timestep)) + 
-  geom_line(aes(y = x, colour = "x")) + 
-  geom_line(aes(y = y, colour = "y")) + 
-  geom_line(aes(y = z, colour = "z"))
-
-
 #Unite the dataframes
 df = rbind(df1,df2)
 dim(df)
@@ -52,41 +34,4 @@ View(df)
 #df contains now two datasets, let's assume that a person (wearing the accelerometer) washed his teeth and 
 #then due to climbed the stairs in his apartment to rest in the living room.
 #With clustering we would like to distinguish between the 2 events.
-
-################### dev
-head(df)
-head(df1)
-head(df2)
-head(df1_sample)
-head(df2_sample)
-
-train_data_with_class <- rbind(df1_sample, df2_sample)
-train_data_class <- train_data_with_class$class
-
-head(train_data_with_class)
-
-train_data <- train_data_with_class
-train_data$class <- NULL
-train_data$timestep <- NULL
-
-head(train_data)
-
-
-head(df)
-test_data <- df
-test_data$timestep <- NULL
-test_data$class <- NULL
-
-head(test_data)
-nrow(test_data)
-dim(train_data)
-dim(test_data)
-test_data <- df 
-pred_knn <- knn(train=train_data, test=test_data, cl=train_data_class, k=2 )
-table(pred_knn, df$class)
-
-truthVectorValidate_knn = pred_knn == df$class
-good = length(truthVectorValidate_knn[truthVectorValidate_knn==TRUE])
-bad = length(truthVectorValidate_knn[truthVectorValidate_knn==FALSE])
-bad/(good+bad)
 
