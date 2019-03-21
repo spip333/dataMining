@@ -47,13 +47,12 @@ ggplot(df2_sample, aes(timestep)) +
 #Unite the dataframes
 df = rbind(df1,df2)
 dim(df)
-View(df)
+head(df)
 
 #df contains now two datasets, let's assume that a person (wearing the accelerometer) washed his teeth and 
 #then due to climbed the stairs in his apartment to rest in the living room.
 #With clustering we would like to distinguish between the 2 events.
 
-head(df)
 head(df1)
 head(df2)
 head(df1_sample)
@@ -89,6 +88,19 @@ false /(correct + false)
 
 
 #########################################################################
+head(df)
+
+
+km1= kmeans(df,centers=2)#,iter.max = )
+km1$cluster
+km1$centers
+km1$totss
+km1$withinss
+km1$tot.withinss
+km1$betweenss
+km1$size
+
+?kmeans
 head(iris)
 iris_data = as.matrix(iris[,1:4])
 head(iris_data)

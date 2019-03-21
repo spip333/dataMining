@@ -11,6 +11,12 @@ s3d = scatterplot3d(iris[,1],iris[,4],iris[,3], highlight.3d=TRUE, col.axis="blu
 iris_data = as.matrix(iris[,1:4])
 number_of_clusters = 3
 km = kmeans(iris_data,centers=number_of_clusters)#,iter.max = )
+km$cluster
+km$centers
+km$totss
+km$withinss
+km$tot.withinss
+km$betweenss
 
 s3d$points3d(km$centers[,1],km$centers[,4],km$centers[,3], pch = 16, col = "green")
 
