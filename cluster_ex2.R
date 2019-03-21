@@ -58,19 +58,39 @@ head(df2)
 head(df1_sample)
 head(df2_sample)
 
+####################################
+# Test with the k-mean
+####################################
+head(df)
+set.seed(20)
+clusters <- kmeans(df[,3:5], 2)
+str(clusters)
+clusters$withinss
+clusters$tot.withinss
+clusters$betweenss
+
+#evaluation: proportion of points within clusters
+clusters$betweenss / (clusters$tot.withinss + clusters$betweenss)
+
+
+####################################
+# Test with the k-nearest-neighbor
+####################################
+library("e1071")
+library(class)
+
+
 # create a set of train data with the two samples
 train_data_with_class <- rbind(df1_sample, df2_sample)
 train_data_class <- train_data_with_class$class
-train_data <- train_data_with_class
-train_data$class <- NULL
-train_data$timestep <- NULL
+
+train_data <- train_data_with_class[,3:5]
 
 head(train_data)
 
 # prepare the set of test data from df
-test_data <- df
-test_data$timestep <- NULL
-test_data$class <- NULL
+head(df)
+test_data <- df[,3:5]
 
 # check and proceed to knn
 dim(train_data)
@@ -80,30 +100,9 @@ pred_knn <- knn(train=train_data, test=test_data, cl=train_data_class, k=2 )
 
 table(pred_knn, df$class)
 
-# validate result
+# validate result : how many correctly predicted points?
 truthVectorValidate_knn = pred_knn == df$class
 correct = length(truthVectorValidate_knn[truthVectorValidate_knn==TRUE])
 false = length(truthVectorValidate_knn[truthVectorValidate_knn==FALSE])
 false /(correct + false)
 
-
-#########################################################################
-head(df)
-
-
-km1= kmeans(df,centers=2)#,iter.max = )
-km1$cluster
-km1$centers
-km1$totss
-km1$withinss
-km1$tot.withinss
-km1$betweenss
-km1$size
-
-?kmeans
-head(iris)
-iris_data = as.matrix(iris[,1:4])
-head(iris_data)
-number_of_clusters = 3
-km = kmeans(iris_data,centers=number_of_clusters)#,iter.max = )
-km
