@@ -112,3 +112,10 @@ head(df$class)
 
 m <- NULL
 pred_nb <- NULL
+
+adf1 <- data.frame(c(1,2,3,4,5))
+adf2 <- data.frame(c(11,22,33,44,55))
+colnames(adf2) <- "col"
+
+adf <- rbind(adf1, adf2)
+adf
