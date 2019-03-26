@@ -3,7 +3,7 @@ library("e1071")
 library(class)
 
 mnist_matrix_full = read.csv( 'MNIST.csv' ) 
-mnist_matrix = mnist_matrix_full[1:1000,]
+mnist_matrix = mnist_matrix_full[1:600,]
 dim(mnist_matrix) 
 sort(unique(mnist_matrix[,1])) 
 
@@ -15,7 +15,7 @@ for(i in 1:10){
   image( y[,nrow(y):1], axes = FALSE, col = gray(255:0 / 255))
   text( 0.2, 0, mnist_matrix[i,1], cex = 3, col = 2, pos = c(3,4)) 
 } 
-
+28*28
 # prepare data
 ind = sample(2, nrow(mnist_matrix), replace=TRUE, prob=c(0.1, 0.9))
 train_data_with_label = mnist_matrix[ind==1,]
@@ -53,6 +53,8 @@ table(test_labels, pred_nb)
 truth_vector_validate_nb = pred_nb == test_labels
 good_nb = length(truth_vector_validate_nb[truth_vector_validate_nb==TRUE])
 bad_nb = length(truth_vector_validate_nb[truth_vector_validate_nb==FALSE])
-bad_nb/(good_nb+bad_nb)
+result_nb <- good_nb/(good_nb+bad_nb)
+
+round(result_nb, 2)
 
 

@@ -19,8 +19,7 @@ library(class)
 Das setup setzt voraus, das das Skript im Arbeitsverzeichnis abgelegt ist, und dass die *.csv Datein mit den Daten im selben Verzeichnis auch vorhanden ist.
 
 ```{r}
-mnist_matrix_full = read.csv( 'MNIST.csv' ) 
-mnist_matrix = mnist_matrix_full[1:1000,]
+mnist_matrix = read.csv( 'MNIST.csv' ) 
 ```
 
 # Fragen / Antworten über die Daten
@@ -31,11 +30,11 @@ a. Wieviele Bilder sind in der Matrix mnist_matrix encodiert
 dim(mnist_matrix) 
 ```
 
-=> Die Matrix mit der Daten ist 42000 Zeilen Lang, jede Zeile enthält ein Bild.
+Antwort: Die Matrix mit der Daten ist 42000 Zeilen Lang, jede Zeile enthält ein Bild.
 
 b. Da es sich um einen Supervised Machine Learning task handelt muss ein Label (Target Variable) bereitgestellt sein - welche Spalte der Matrix enthält das Label?
 
-=> Die 1. Spalte der Matrix enthält das Label. Der Wertebereich der 1. Spalte wird wie folgt  ersichtlich: 
+Antwort: Die 1. Spalte der Matrix enthält das Label. Der Wertebereich der 1. Spalte wird wie folgt  ersichtlich: 
 
 ```{r}
 sort(unique(mnist_matrix[,1])) 
@@ -43,11 +42,11 @@ sort(unique(mnist_matrix[,1]))
 
 c. Wieviele Pixel haben die Bilder?
 
-=> jede Zeile hat 785 Spalten. 1. Spalte ist der Label, die restliche 784 Spalten enthalten die Pixel-Werte. Jedes Bild hat also 784 Pixels.
+Antwort: jede Zeile hat 785 Spalten. 1. Spalte ist der Label, die restliche 784 Spalten enthalten die Pixel-Werte. Jedes Bild hat also 784 Pixels.
 
 d. Wie hoch/breit sind die Bilder?
 
-=> Jedes Bild kann als 28 * 28 Quadrat ausgedruckt werden: (28 X 28 = 784) 
+Antwort: Jedes Bild kann als 28 * 28 Quadrat ausgedruckt werden: (28 X 28 = 784) 
 
 # Print die ersten 10 Bilder mit dem Label
 
@@ -67,19 +66,21 @@ for(i in 1:10){
 Die Daten werden in einer Training Datenmenge und einer Test Datenmenge aufgetrennt. Die Training Datenmenge enthält 10% der Totalen Datenmenge.
 
 ```{r}
-ind = sample(2, nrow(mnist_matrix), replace=TRUE, prob=c(0.1, 0.9))
-train_data_with_label = mnist_matrix[ind==1,]
-test_data_with_label = mnist_matrix[ind==2,]
+# Erstellen eines Samples für die Auftrennung Train- / Test -Daten
+index = sample(2, nrow(mnist_matrix), replace=TRUE, prob=c(0.1, 0.9))
+train_data_with_label = mnist_matrix[index==1,]
+test_data_with_label = mnist_matrix[index==2,]
 
+# Spalte mit Labels weglassen
 train_data = train_data_with_label[-1]
 test_data = test_data_with_label[-1]
 
+# Vector der Labels erstellen
 train_labels = factor(train_data_with_label[,1])
 test_labels = factor(test_data_with_label[,1])
 ```
 
-
-# KNN
+# Versuch einer Auswertung mit KNN
 ```{r}
 pred_knn = knn(train = train_data, 
                test = test_data, 
@@ -89,26 +90,83 @@ pred_knn = knn(train = train_data,
 
 table(pred_knn, test_labels) 
 
-truth_vector_validate_knn = pred_knn == test_labels
-good_knn = length(truth_vector_validate_knn[truth_vector_validate_knn==TRUE])
-bad_knn = length(truth_vector_validate_knn[truth_vector_validate_knn==FALSE])
-bad_knn / (good_knn+bad_knn)
-
+# Auswertung 
+validate_knn = pred_knn == test_labels
+good_knn = length(validate_knn[validate_knn==TRUE])
+bad_knn = length(validate_knn[validate_knn==FALSE])
+prop_good_knn <- good_knn / (good_knn + bad_knn)
 ```
 
-# naive-bayes
+Schlussfolgerung: mit KNN und einer Training - Datensatz von 10% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage  `r round(prop_good_knn*100, 2)` %.
+
+# Versuch einer Auswertung mit Naive-Bayes
 ```{r}
-m = naiveBayes(train_data, train_labels)
-pred_nb = predict(m, test_data)
-table(test_labels, pred_nb)
+model = naiveBayes(train_data, train_labels)
+pred_nb = predict(model, test_data)
+table(pred_nb, test_labels)
 
-truth_vector_validate_nb = pred_nb == test_labels
-good_nb = length(truth_vector_validate_nb[truth_vector_validate_nb==TRUE])
-bad_nb = length(truth_vector_validate_nb[truth_vector_validate_nb==FALSE])
-bad_nb/(good_nb+bad_nb)
-
+validate_nb = pred_nb == test_labels
+good_nb = length(validate_nb[validate_nb == TRUE])
+bad_nb  = length(validate_nb[validate_nb == FALSE])
+prop_good_nb <- good_nb / (good_nb + bad_nb)
 ```
 
+Schlussfolgerung: mit Naive-Bayes und einer Training - Datensatz von 10% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage `r round(prop_good_nb*100, 2)` %.
+
+
+# Erkenntnisse
+
+Mit einer relativen kleinen Training Satz (10% der gesamten Datenmenge) erreicht man mit KNN eine korrekte Prognose in  `r round(prop_good_knn*100, 2)` % der Fälle. Mit der selben Proportion, erreicht man mit Naive-Bayes nur `r round(prop_good_nb*100, 2)` % korrekte Prognose.
+
+Wie sieht es aus mit einer grösseren Training Set, z.B. mit 1/4 der Daten?
+
+```{r}
+# Erstellen eines Samples für die Auftrennung Train- / Test -Daten
+index2 = sample(2, nrow(mnist_matrix), replace=TRUE, prob=c(0.25, 0.75))
+train_data_with_label2 = mnist_matrix[index2==1,]
+test_data_with_label2 = mnist_matrix[index2==2,]
+
+# Spalte mit Labels weglassen
+train_data2 = train_data_with_label2[-1]
+test_data2 = test_data_with_label2[-1]
+
+# Vector der Labels erstellen
+train_labels2 = factor(train_data_with_label2[,1])
+test_labels2 = factor(test_data_with_label2[,1])
+
+# Versuch einer Auswertung mit KNN
+
+pred_knn2 = knn(train = train_data2, 
+               test = test_data2, 
+               cl= train_labels2, 
+               k = 10, 
+               prob=TRUE) 
+
+table(pred_knn2, test_labels2) 
+
+# Auswertung 
+validate_knn2 = pred_knn2 == test_labels2
+good_knn2 = length(validate_knn2[validate_knn2==TRUE])
+bad_knn2 = length(validate_knn2[validate_knn2==FALSE])
+prop_good_knn2<- good_knn2 / (good_knn2 + bad_knn2)
+
+# Versuch einer Auswertung mit Naive-Bayes
+
+model2 = naiveBayes(train_data2, train_labels2)
+pred_nb2 = predict(model2, test_data2)
+table(pred_nb2, test_labels2)
+
+validate_nb2 = pred_nb2 == test_labels2
+good_nb2 = length(validate_nb2[validate_nb2 == TRUE])
+bad_nb2  = length(validate_nb2[validate_nb2 == FALSE])
+prop_good_nb2 <- good_nb2 / (good_nb2 + bad_nb2)
+```
+
+# Schlussfolgerung
+
+Mit KNN und einer Training - Datensatz von 25% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage `r round(prop_good_knn2*100, 2)` % , und mit Naive-Bayes von `r round(prop_good_nb2*100, 2)` %.  Das ist praktisch identisch, wie wenn die Testdaten nur 10% des gesamten Datenbestandes darstellen, bringt also keine notable Verbesserung.
+
+Fazit: mit nur 10% des Datenbestandes hat man eine Training-Datensatz das eine Erfolgsquote über 90% ermöglicht.
 
 
 

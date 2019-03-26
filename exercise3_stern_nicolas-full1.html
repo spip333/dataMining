@@ -205,7 +205,8 @@ $(document).ready(function () {
 <div id="daten-laden" class="section level1">
 <h1>Daten laden</h1>
 <p>Das setup setzt voraus, das das Skript im Arbeitsverzeichnis abgelegt ist, und dass die *.csv Datein mit den Daten im selben Verzeichnis auch vorhanden ist.</p>
-<pre class="r"><code>mnist_matrix = read.csv( 'MNIST.csv' ) </code></pre>
+<pre class="r"><code>mnist_matrix = read.csv( 'MNIST.csv' ) 
+# mnist_matrix = mnist_matrix_full[1:4000,]</code></pre>
 </div>
 <div id="fragen-antworten-uber-die-daten" class="section level1">
 <h1>Fragen / Antworten über die Daten</h1>
@@ -269,115 +270,45 @@ test_labels = factor(test_data_with_label[,1])</code></pre>
 table(pred_knn, test_labels) </code></pre>
 <pre><code>##         test_labels
 ## pred_knn    0    1    2    3    4    5    6    7    8    9
-##        0 3643    0   72   13    4   22   38    4   24   19
-##        1    2 4186  165   66  101   57   26  140  161   46
-##        2    6    4 3281   31    1    2    8    8   18    7
-##        3    0    1   38 3578    1  124    0    1  163   46
-##        4    1    2    4    2 3257   13    7   14   23   54
-##        5   25    0    9   59    2 3040   22    2  126    6
-##        6   43    3   22   18   27   68 3614    1   26    3
-##        7    2    6  110   59   17   12    0 3692   21  144
-##        8    2    2   33   52    1    7    4    0 2996    7
-##        9    6    3    9   39  257   63    0   68   86 3450</code></pre>
+##        0 3669    0   58   11    3   18   36    2   24   16
+##        1    5 4174  196   69   90   40   37  123  157   37
+##        2    2    8 3243   32    0    0    2   10    6    4
+##        3    1    2   36 3565    0  104    1    1  105   44
+##        4    4    9   31    4 3237   13   12   19   24   82
+##        5   14    0   22   86    1 3099   24    2  155    9
+##        6   37    1   20   13   25   63 3608    1   32    3
+##        7    6    8  118   53   20    8    1 3679   24  137
+##        8    2    1   27   52    2    8    5    2 3008   14
+##        9    2    2   25   45  281   53    0  100  125 3413</code></pre>
 <pre class="r"><code># Auswertung 
 validate_knn = pred_knn == test_labels
 good_knn = length(validate_knn[validate_knn==TRUE])
 bad_knn = length(validate_knn[validate_knn==FALSE])
 prop_good_knn &lt;- good_knn / (good_knn + bad_knn)</code></pre>
-<p>Schlussfolgerung: mit KNN und einer Training - Datensatz von 10% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage 92.02 %.</p>
+<p>Schlussfolgerung: mit KNN und einer Training - Datensatz von 10% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage 0.9178086</p>
 </div>
 <div id="versuch-einer-auswertung-mit-naive-bayes" class="section level1">
 <h1>Versuch einer Auswertung mit Naive-Bayes</h1>
 <pre class="r"><code>model = naiveBayes(train_data, train_labels)
 pred_nb = predict(model, test_data)
-table(pred_nb, test_labels)</code></pre>
-<pre><code>##        test_labels
-## pred_nb    0    1    2    3    4    5    6    7    8    9
-##       0 3436    1  313  409   34  567   51   93   72   38
-##       1   18 4155  454  653  154  515  233  425 1278  321
-##       2    8    0  642   20    3    8    7    1    8    1
-##       3    7    1  572 1832   10  131    5   22   75    8
-##       4    6    1   90   45  814   90   19   62   59   58
-##       5    8    1  113   33   16  346   18    6   30    4
-##       6   75   19  970  191  180  203 3196   22   97    8
-##       7    0    0    7   37    6    4    1  899    2   13
-##       8   24    8  385  149   46  676   28   24  987   16
-##       9  148   21  197  548 2405  868  161 2376 1036 3315</code></pre>
+table(test_labels, pred_nb)</code></pre>
+<pre><code>##            pred_nb
+## test_labels    0    1    2    3    4    5    6    7    8    9
+##           0 2853   12    9    2    5    6   78    0  585  192
+##           1    0 4115    2    1    1    1   17    0   46   22
+##           2  131  285  670  278   40  147  870    5 1247  103
+##           3   78  442   25 1027   19   39  131   16 1675  478
+##           4   12  109    5    3  596   24  111    7  531 2261
+##           5  156  342   12   58   44  257  101    3 1932  501
+##           6   35  251    6    0   11   13 2880    0  203  327
+##           7   26  249    1    9   44    9   12  724  280 2585
+##           8   24  958    5   19   23   32   25    2 1803  769
+##           9   13  257    2    4   51    5   10    7   83 3327</code></pre>
 <pre class="r"><code>validate_nb = pred_nb == test_labels
 good_nb = length(validate_nb[validate_nb == TRUE])
 bad_nb  = length(validate_nb[validate_nb == FALSE])
 prop_good_nb &lt;- good_nb / (good_nb + bad_nb)</code></pre>
-<p>Schlussfolgerung: mit Naive-Bayes und einer Training - Datensatz von 10% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage 51.98 %.</p>
-</div>
-<div id="erkenntnisse" class="section level1">
-<h1>Erkenntnisse</h1>
-<p>Mit einer relativen kleinen Training Satz (10% der gesamten Datenmenge) erreicht man mit KNN eine korrekte Prognose in 92.02 % der Fälle. Mit der selben Proportion, erreicht man mit Naive-Bayes nur 51.98 % korrekte Prognose.</p>
-<p>Wie sieht es aus mit einer grösseren Training Set, z.B. mit 1/4 der Daten?</p>
-<pre class="r"><code># Erstellen eines Samples für die Auftrennung Train- / Test -Daten
-index2 = sample(2, nrow(mnist_matrix), replace=TRUE, prob=c(0.25, 0.75))
-train_data_with_label2 = mnist_matrix[index2==1,]
-test_data_with_label2 = mnist_matrix[index2==2,]
-
-# Spalte mit Labels weglassen
-train_data2 = train_data_with_label2[-1]
-test_data2 = test_data_with_label2[-1]
-
-# Vector der Labels erstellen
-train_labels2 = factor(train_data_with_label2[,1])
-test_labels2 = factor(test_data_with_label2[,1])
-
-# Versuch einer Auswertung mit KNN
-
-pred_knn2 = knn(train = train_data2, 
-               test = test_data2, 
-               cl= train_labels2, 
-               k = 10, 
-               prob=TRUE) 
-
-table(pred_knn2, test_labels2) </code></pre>
-<pre><code>##          test_labels2
-## pred_knn2    0    1    2    3    4    5    6    7    8    9
-##         0 3077    0   41    5    1    9   28    6   21   15
-##         1    1 3461   97   24   60   22   10   74   74   21
-##         2    2    8 2817   18    0    0    0    9    8    5
-##         3    0    1   27 3050    0   56    0    0   92   37
-##         4    1    2   15    3 2807   11    4    7   20   26
-##         5    3    0    3   48    0 2692   17    2   86   10
-##         6   22    2   15    2   17   44 3051    1   20    3
-##         7    0    5   89   31   10    4    0 3105   12   59
-##         8    1    1   17   22    1    4    1    1 2644    5
-##         9    2    0    7   25  161   39    0   68   59 2878</code></pre>
-<pre class="r"><code># Auswertung 
-validate_knn2 = pred_knn2 == test_labels2
-good_knn2 = length(validate_knn2[validate_knn2==TRUE])
-bad_knn2 = length(validate_knn2[validate_knn2==FALSE])
-prop_good_knn2&lt;- good_knn2 / (good_knn2 + bad_knn2)
-
-# Versuch einer Auswertung mit Naive-Bayes
-
-model2 = naiveBayes(train_data2, train_labels2)
-pred_nb2 = predict(model2, test_data2)
-table(pred_nb2, test_labels2)</code></pre>
-<pre><code>##         test_labels2
-## pred_nb2    0    1    2    3    4    5    6    7    8    9
-##        0 2826    0  467  485   90  597   38   49   85   30
-##        1    7 3396  170  347   75  178   89  115  710  145
-##        2   13    2  657   16   11   13    3    1    7    3
-##        3    2    1  171  901    6   36    2    9   20    1
-##        4    0    0    7    6  347   18    9   24   16   19
-##        5    9    3   40   23   19  297   10   10   16    0
-##        6  169   28 1063  303  376  294 2926   73  159   39
-##        7    0    1    8   21    9    4    1  839    2    8
-##        8   26   32  480  720  180  996   19   72 1333   41
-##        9   57   17   65  406 1944  448   14 2081  688 2773</code></pre>
-<pre class="r"><code>validate_nb2 = pred_nb2 == test_labels2
-good_nb2 = length(validate_nb2[validate_nb2 == TRUE])
-bad_nb2  = length(validate_nb2[validate_nb2 == FALSE])
-prop_good_nb2 &lt;- good_nb2 / (good_nb2 + bad_nb2)</code></pre>
-<h1>Schlussfolgerung</h1>
-<p>Mit KNN und einer Training - Datensatz von 25% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage 94.32 % , und mit Naive-Bayes von 51.96 %. Das ist praktisch identisch, wie wenn die Testdaten nur 10% des gesamten Datenbestandes darstellen, bringt also keine notable Verbesserung.</p>
-<p>Fazit: mit nur 10% des Datenbestandes hat man eine Training-Datensatz das eine Erfolgsquote über 90% ermöglicht.</p>
-
+<p>Schlussfolgerung: mit Naive-Bayes und einer Training - Datensatz von 10% der Gesamten Test-Datenmenge ist das Verhältnis der korrekten Voraussage 0.4828316</p>
 </div>
 
 
